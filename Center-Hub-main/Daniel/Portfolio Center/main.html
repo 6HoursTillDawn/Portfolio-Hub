@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PORTFOLIO CENTER</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="app" id="app">
+        <header class="top">
+            <div class="brand">
+                <div class="logo">T</div>
+                <div>
+                    <h1>PORTFOLIO CENTER</h1>
+                    <small>LOCAL FILE VAULT • PERSONAL WORKSPACE</small>
+                </div>
+            </div>
+            <div class="status">
+                <span class="dot"></span>
+                SECURE WORKSPACE
+            </div>
+        </header>
+
+        <div id="auth" class="formbox" style="display: none"></div>
+
+        <div class="layout" id="workspace" style="display: none">
+            <aside class="sidebar">
+                <div class="nav-label">WORKSPACE</div>
+                <button class="nav active" data-page="dashboard">◈ Dashboard</button>
+                <button class="nav" data-page="command">⌘ Command Center</button>
+                <button class="nav" data-page="vault">▣ My File Vault</button>
+                <button class="nav" data-page="projects">⌘ Code Lab</button>
+                <button class="nav" data-page="settings">⚙ Vault Settings</button>
+                <div class="side-note">
+                    Files are encrypted in this browser. Nothing is uploaded to GitHub or a server.
+                    <br><br>
+                    <span style="color: #a83a50">LOCAL STORAGE ONLY</span>
+                </div>
+            </aside>
+
+            <main class="main">
+                <section class="page active" id="dashboard">
+                    <div class="heading">
+                        <div>
+                            <div class="eyebrow">OVERVIEW / 01</div>
+                            <h2>Workspace Dashboard</h2>
+                            <p>Your portfolio files, organized in one local center.</p>
+                        </div>
+                        <button class="btn primary" onclick="openUpload()">＋ Add Files</button>
+                    </div>
+
+                    <div class="grid">
+                        <div class="stat">
+                            <div class="label">FILES STORED</div>
+                            <div class="value" id="statFiles">0</div>
+                            <div class="hint">Encrypted in this browser</div>
+                        </div>
+                        <div class="stat">
+                            <div class="label">PROJECT CATEGORIES</div>
+                            <div class="value" id="statProjects">0</div>
+                            <div class="hint">Code Lab folders</div>
+                        </div>
+                        <div class="stat">
+                            <div class="label">VAULT STATUS</div>
+                            <div class="value" style="font-size: 20px; color: var(--green)">LOCKED-IN</div>
+                            <div class="hint">Session unlocked</div>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <h3>Quick actions</h3>
+                        <div class="quick">
+                            <button class="btn" onclick="openUpload()">Upload files</button>
+                            <button class="btn ghost" onclick="go('vault')">Browse vault</button>
+                            <button class="btn ghost" onclick="go('projects')">Open Code Lab</button>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <h3>Recently added</h3>
+                        <div id="recent"></div>
+                    </div>
+
+                    <div class="panel">
+                        <h3>Important security note</h3>
+                        <p class="security-note">
+                            Your files are encrypted using a PIN-derived key before being saved in IndexedDB.
+                            Keep your recovery key somewhere safe. If you lose both your PIN and recovery key,
+                            encrypted files cannot be recovered. Browser data clearing may permanently delete
+                            this vault.
+                        </p>
+                    </div>
+                </section>
+
+                <section class="page" id="command">
+                    <div class="heading">
+                        <div>
+                            <div class="eyebrow">CORE / 00</div>
+                            <h2>Command Center</h2>
+                            <p>Quick commands, developer tools, and project workflows in one place.</p>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <h3>Command Directory</h3>
+                        <input
+                            class="search"
+                            id="commandSearch"
+                            placeholder="Filter commands..."
+                            oninput="filterCommands()"
+                        >
+                        <div id="commandList" class="command-list"></div>
+                    </div>
+
+                    <div class="panel">
+                        <h3>Developer tools</h3>
+                        <div class="quick">
+                            <button class="btn" onclick="launchTool('Code Generator')">Code Generator</button>
+                            <button class="btn" onclick="launchTool('Bug Analyzer')">Bug Analyzer</button>
+                            <button class="btn" onclick="launchTool('UI Architect')">UI Architect</button>
+                            <button class="btn" onclick="launchTool('File Planner')">File Planner</button>
+                            <button class="btn" onclick="launchTool('Performance Analyzer')">Performance Analyzer</button>
+                            <button class="btn" onclick="launchTool('Documentation Writer')">Documentation Writer</button>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <h3>Request launcher</h3>
+                        <div class="field">
+                            <label>What do you want to help with?</label>
+                            <textarea
+                                id="commandTask"
+                                class="search"
+                                rows="4"
+                                placeholder="Describe the code, feature, bug, or project..."
+                            ></textarea>
+                        </div>
+                        <div class="field">
+                            <label>Target Code Lab category</label>
+                            <select id="commandCategory">
+                                <option>Java</option>
+                                <option>Python</option>
+                                <option>JavaScript</option>
+                                <option>HTML / CSS</option>
+                                <option>C#</option>
+                                <option>Unity</option>
+                                <option>Android Development</option>
+                                <option>API Development</option>
+                                <option>Project Architecture</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <button class="btn primary" onclick="sendCommandTask()">Send request to Code Lab</button>
+                    </div>
+                </section>
+
+                <section class="page" id="vault">
+                    <div class="heading">
+                        <div>
+                            <div class="eyebrow">STORAGE / 02</div>
+                            <h2>My File Vault</h2>
+                            <p>Search, download, or remove files you've stored.</p>
+                        </div>
+                        <button class="btn primary" onclick="openUpload()">＋ Upload</button>
+                    </div>
+                    <input
+                        class="search"
+                        id="searchFiles"
+                        placeholder="Search files or categories..."
+                        oninput="renderFiles()"
+                    >
+                    <div id="fileList"></div>
+                </section>
+
+                <section class="page" id="projects">
+                    <div class="heading">
+                        <div>
+                            <div class="eyebrow">DEVELOPMENT / 03</div>
+                            <h2>Code Lab</h2>
+                            <p>Store project assets by language or development category.</p>
+                        </div>
+                        <button class="btn primary" onclick="openUpload()">＋ Add to Code Lab</button>
+                    </div>
+                    <div class="field">
+                        <label>Filter category</label>
+                        <select id="categoryFilter" onchange="renderFiles()">
+                            <option value="all">All categories</option>
+                            <option>Java</option>
+                            <option>Python</option>
+                            <option>JavaScript</option>
+                            <option>HTML / CSS</option>
+                            <option>C#</option>
+                            <option>Unity</option>
+                            <option>Android Development</option>
+                            <option>API Development</option>
+                            <option>Project Architecture</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div id="projectList"></div>
+                </section>
+
+                <section class="page" id="settings">
+                    <div class="heading">
+                        <div>
+                            <div class="eyebrow">SECURITY / 04</div>
+                            <h2>Vault Settings</h2>
+                            <p>Manage your local vault session and recovery.</p>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <h3>Session</h3>
+                        <button class="btn danger" onclick="lockVault()">Lock vault / Sign out</button>
+                        <p class="security-caption">
+                            Locking clears the unlocked encryption key from this page's memory.
+                            Your stored files remain encrypted.
+                        </p>
+                    </div>
+
+                    <div class="panel">
+                        <h3>Change PIN</h3>
+                        <button class="btn ghost" onclick="showChangePin()">Change PIN</button>
+                        <p class="security-caption">You'll need your current PIN to change it.</p>
+                    </div>
+
+                    <div class="panel">
+                        <h3>Recovery key</h3>
+                        <button class="btn ghost" onclick="showRecovery()">View recovery instructions</button>
+                        <p class="security-caption">
+                            The recovery key was shown once during setup. It isn't stored in readable form.
+                        </p>
+                    </div>
+
+                    <div class="panel">
+                        <h3>Delete vault</h3>
+                        <button class="btn danger" onclick="deleteVaultPrompt()">Permanently delete local vault</button>
+                        <p class="security-caption">
+                            This permanently removes all encrypted files and vault credentials from this browser.
+                            This cannot be undone.
+                        </p>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <div class="foot"> SAVING YOUR TOOLS HERE • MADE BY DANIEL  • 10/2/2026</div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <div class="modal-bg" id="modalBg">
+        <div class="modal" id="modal"></div>
+    </div>
+
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/database.js"></script>
+    <script src="assets/js/crypto.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/ui.js"></script>
+    <script src="assets/js/commands.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
