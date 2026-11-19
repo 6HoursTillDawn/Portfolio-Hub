@@ -1,4 +1,38 @@
 // Workspace navigation, file vault, upload, settings, and display
+let scrollRevealObserver;
+
+function animateOnScroll(root = document) {
+  let elements = root.querySelectorAll(
+    ".heading, .stat, .panel, .file-row, .command-item",
+  );
+  if (
+    !("IntersectionObserver" in window) ||
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  ) {
+    elements.forEach((element) => element.classList.add("is-visible"));
+    return;
+  }
+  if (!scrollRevealObserver) {
+    scrollRevealObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -36px 0px" },
+    );
+  }
+  elements.forEach((element, index) => {
+    if (element.classList.contains("scroll-reveal")) return;
+    element.classList.add("scroll-reveal");
+    element.style.setProperty("--reveal-delay", `${(index % 4) * 55}ms`);
+    scrollRevealObserver.observe(element);
+  });
+}
+
 function go(page) {
   document
     .querySelectorAll(".page")
@@ -7,6 +41,7 @@ function go(page) {
   document
     .querySelectorAll(".nav")
     .forEach((n) => n.classList.toggle("active", n.dataset.page === page));
+  animateOnScroll(document.getElementById(page));
 }
 document
   .querySelectorAll(".nav")
@@ -86,6 +121,8 @@ function renderFiles() {
   document.getElementById("projectList").innerHTML = fs.length
     ? fs.map(fileRow).join("")
     : `<div class="empty">Nothing in this category yet. Use “Add to Code Lab” to upload project files.</div>`;
+  animateOnScroll(document.getElementById("fileList"));
+  animateOnScroll(document.getElementById("projectList"));
 }
 function renderRecent() {
   let recent = [...filesCache]
@@ -94,6 +131,7 @@ function renderRecent() {
   document.getElementById("recent").innerHTML = recent.length
     ? recent.map(fileRow).join("")
     : `<div class="empty">Your recent uploads will appear here.</div>`;
+  animateOnScroll(document.getElementById("recent"));
 }
 async function downloadFile(id) {
   let f = filesCache.find((x) => x.id === id);

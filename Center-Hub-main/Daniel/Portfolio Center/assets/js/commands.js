@@ -11,6 +11,7 @@ function filterCommands() {
           `<div class="command-item"><div><strong>${c[0]}</strong><small>${c[1]}</small></div><div class="quick"><button class="btn ghost mini" onclick="copyCommand('${c[0]}')">Copy</button><button class="btn mini" onclick="runCommand('${c[0]}')">Run</button></div></div>`,
       )
       .join("") || '<div class="empty">No matching commands.</div>';
+  animateOnScroll(list);
 }
 function copyCommand(c) {
   if (navigator.clipboard?.writeText)
